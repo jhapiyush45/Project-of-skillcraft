@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stopwatch</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #111;
+            color: white;
+        }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        #display {
+            font-size: 40px;
+            margin: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background: teal;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: darkcyan;
+        }
+
+        ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+        <h1>Stopwatch</h1>
+
+        <div id="display">00:00:00</div>
+
+        <div>
+            <button onclick="start()">Start</button>
+            <button onclick="pause()">Pause</button>
+            <button onclick="reset()">Reset</button>
+            <button onclick="lap()">Lap</button>
+        </div>
+
+        <ul id="laps"></ul>
+    </div>
+
+    <script>
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+        let timer = null;
+
+        function updateDisplay() {
+            let h = String(hours).padStart(2, '0');
+            let m = String(minutes).padStart(2, '0');
+            let s = String(seconds).padStart(2, '0');
+
+            document.getElementById("display").innerText = h + ":" + m + ":" + s;
+        }
+
+        function start() {
+            if (timer !== null) return;
+
+            timer = setInterval(() => {
+                seconds++;
+
+                if (seconds === 60) {
+                    seconds = 0;
+                    minutes++;
+                }
+
+                if (minutes === 60) {
+                    minutes = 0;
+                    hours++;
+                }
+
+                updateDisplay();
+            }, 1000);
+        }
+
+        function pause() {
+            clearInterval(timer);
+            timer = null;
+        }
+
+        function reset() {
+            pause();
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            updateDisplay();
+            document.getElementById("laps").innerHTML = "";
+        }
+
+        function lap() {
+            let lapTime = document.getElementById("display").innerText;
+            let li = document.createElement("li");
+            li.innerText = lapTime;
+            document.getElementById("laps").appendChild(li);
+        }
+    </script>
+
+</body>
+</html>
