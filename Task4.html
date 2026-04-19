@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>To-Do App</title>
+
+<style>
+    body {
+        font-family: Arial;
+        background: #1e1e2f;
+        color: white;
+        text-align: center;
+    }
+
+    h1 {
+        margin-top: 20px;
+    }
+
+    .container {
+        margin-top: 20px;
+    }
+
+    input, button {
+        padding: 10px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    input {
+        width: 200px;
+    }
+
+    button {
+        background: #00bcd4;
+        color: white;
+        cursor: pointer;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+    }
+
+    li {
+        background: #2e2e48;
+        margin: 10px auto;
+        padding: 10px;
+        width: 300px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .completed {
+        text-decoration: line-through;
+        color: gray;
+    }
+</style>
+
+</head>
+
+<body>
+
+<h1>To-Do Web App</h1>
+
+<div class="container">
+    <input type="text" id="taskInput" placeholder="Enter task">
+    <input type="datetime-local" id="taskDate">
+    <button onclick="addTask()">Add</button>
+</div>
+
+<ul id="taskList"></ul>
+
+<script>
+    let tasks = [];
+
+    function addTask() {
+        let text = document.getElementById("taskInput").value;
+        let date = document.getElementById("taskDate").value;
+
+        if (text === "") {
+            alert("Enter a task!");
+            return;
+        }
+
+        let task = {
+            text: text,
+            date: date,
+            completed: false
+        };
+
+        tasks.push(task);
+        displayTasks();
+
+        document.getElementById("taskInput").value = "";
+        document.getElementById("taskDate").value = "";
+    }
+
+    function displayTasks() {
+        let list = document.getElementById("taskList");
+        list.innerHTML = "";
+
+        tasks.forEach((task, index) => {
+            let li = document.createElement("li");
+
+            let taskText = document.createElement("span");
+            taskText.innerHTML = `${task.text} <br><small>${task.date}</small>`;
+
+            if (task.completed) {
+                taskText.classList.add("completed");
+            }
+
+            taskText.onclick = () => toggleComplete(index);
+
+            let editBtn = document.createElement("button");
+            editBtn.innerText = "Edit";
+            editBtn.onclick = () => editTask(index);
+
+            let deleteBtn = document.createElement("button");
+            deleteBtn.innerText = "Delete";
+            deleteBtn.onclick = () => deleteTask(index);
+
+            li.appendChild(taskText);
+            li.appendChild(editBtn);
+            li.appendChild(deleteBtn);
+
+            list.appendChild(li);
+        });
+    }
+
+    function toggleComplete(index) {
+        tasks[index].completed = !tasks[index].completed;
+        displayTasks();
+    }
+
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        displayTasks();
+    }
+
+    function editTask(index) {
+        let newTask = prompt("Edit task:", tasks[index].text);
+        if (newTask !== null) {
+            tasks[index].text = newTask;
+            displayTasks();
+        }
+    }
+</script>
+
+</body>
+</html>
